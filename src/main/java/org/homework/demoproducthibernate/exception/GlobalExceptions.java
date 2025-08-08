@@ -29,14 +29,21 @@ public class GlobalExceptions {
     //-- Handle validation errors for @RequestBody
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail handleBodyValidationException(MethodArgumentNotValidException ex, HttpServletRequest request) {
-        List<Map<String, Object>> errors = new ArrayList<>();
+        Map<String, Map<String, Object>> errorMap = new LinkedHashMap<>();
+
         for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
-            Map<String, Object> error = new HashMap<>();
-            error.put("field", fieldError.getField());
-            error.put("rejectedValue", fieldError.getRejectedValue());
-            error.put("message", fieldError.getDefaultMessage());
-            errors.add(error);
+            String field = fieldError.getField();
+            if (!errorMap.containsKey(field)) {
+                Map<String, Object> error = new HashMap<>();
+                error.put("field", field);
+                error.put("rejectedValue", fieldError.getRejectedValue());
+                error.put("message", fieldError.getDefaultMessage());
+                errorMap.put(field, error);
+            }
         }
+
+        List<Map<String, Object>> errors = new ArrayList<>(errorMap.values());
+
 
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problemDetail.setTitle("Validation Failed (Request Body)");
