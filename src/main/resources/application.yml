@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: demo-product-hibernate
+  datasource:
+    url: jdbc:postgresql://localhost:5444/postgres
+    username: seyha
+    password: seyha123
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+    hibernate:
+      ddl-auto: update
