@@ -2,7 +2,7 @@ spring:
   application:
     name: demo-product-hibernate
   datasource:
-    url: jdbc:postgresql://localhost:5444/postgres
+    url: jdbc:postgresql://localhost:5000/product-db
     username: seyha
     password: seyha123
   jpa:
